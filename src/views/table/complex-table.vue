@@ -14,7 +14,7 @@
       <el-button class="filter-item" type="primary" :icon="iconSearch" @click="handleFilter">
         <span v-waves>Search</span>
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" :icon="iconEdit" @click="handleCreate">
+      <el-button class="filterㄷ-item" style="margin-left: 10px;" type="primary" :icon="iconEdit" @click="handleCreate">
         Add
       </el-button>
       <el-button :loading="downloadLoading" class="filter-item" type="primary" :icon="iconDownload" @click="handleDownload">
@@ -241,6 +241,8 @@ export default defineComponent({
     getList() {
       this.listLoading = true;
       fetchList(this.listQuery).then(response => {
+
+        console.log(response.data.items);
         this.list = response.data.items;
         this.total = response.data.total;
 

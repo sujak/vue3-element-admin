@@ -59,8 +59,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/mixin.scss";
-// @import "@/styles/variables.module.scss";
+@use "@/styles/mixin" as *;
+// @use "@/styles/variables.module.scss";
 
 .app-wrapper {
   @include clearfix;

@@ -259,7 +259,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/mixin.scss";
+@use "@/styles/mixin" as *;
 
 .createPost-container {
   position: relative;

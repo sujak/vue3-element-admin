@@ -80,7 +80,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-    @import "@/styles/mixin.scss";
+    @use "@/styles/mixin" as *;
     .upload-container {
         width: 100%;
         position: relative;
