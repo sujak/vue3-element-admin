@@ -1,4 +1,5 @@
 import { createPinia, acceptHMRUpdate } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import type { StoreDefinition } from 'pinia';
 // https://webpack.js.org/guides/dependency-management/#requirecontext
 const modulesFiles = import.meta.glob('./modules/*.ts', { eager: true });
@@ -16,8 +17,12 @@ Object.keys(modulesFiles).forEach((modulePath) => {
   modules[moduleName] = value.default;
 }, {});
 
+
 export const setupStore = (app) => {
-  app.use(createPinia());
+  const pinia = createPinia();
+  pinia.use(piniaPluginPersistedstate);
+  app.use(pinia);
+
   Object.values(modules).forEach(fn => {
     fn();
     // console.log('import.meta.hot=', import.meta.hot);

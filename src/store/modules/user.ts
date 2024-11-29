@@ -1,127 +1,151 @@
 import { defineStore } from 'pinia';
+import type { PersistOptions } from 'pinia-plugin-persistedstate';
 import { login as apiLogin, logout as apiLogout, getInfo as apiGetInfo } from '@/api/user';
-import { getToken, setToken, removeToken } from '@/utils/auth';
 import router, { resetRouter } from '@/router';
 import tagsViewStore from './tagsView';
 import permissionStore from './permission';
 
 export interface IUserState {
-  token: string;
-  userId: string,
+  accessToken: string | null;
+  userId: string;
   name: string;
   avatar: string;
   introduction: string;
   roles: string[];
+  isAuthenticated: boolean;
 }
 
 export default defineStore({
   id: 'user',
-  state: ():IUserState => ({
-    token: getToken(),
+  state: (): IUserState => ({
+    accessToken: null,
     userId: '',
     name: '',
     avatar: '',
     introduction: '',
-    roles: []
+    roles: [],
+    isAuthenticated: false
   }),
-  getters: {},
+
+  persist: {
+    key: 'user-store',
+    storage: localStorage,
+    paths: ['accessToken', 'userId', 'name', 'avatar', 'introduction', 'roles', 'isAuthenticated']
+  } satisfies PersistOptions<IUserState>,
+
+  getters: {
+    isLoggedIn: (state) => state.isAuthenticated && !!state.accessToken
+  },
+
   actions: {
-    // user login
-    login(userInfo):Promise<void> {
-      const { username, password } = userInfo;
+    setAuth(userData, accessToken: string) {
+      this.accessToken = accessToken;
+      this.userId = userData.id;
+      this.name = userData.name;
+      this.avatar = userData.avatar;
+      this.introduction = userData.introduction;
+      this.roles = userData.roles.map((role) => role.code);
+      this.isAuthenticated = true;
+    },
+
+    clearAuth() {
+      this.accessToken = null;
+      this.userId = '';
+      this.name = '';
+      this.avatar = '';
+      this.introduction = '';
+      this.roles = [];
+      this.isAuthenticated = false;
+    },
+
+    // 로그인
+    login(userInfo): Promise<void> {
+      const { email, password } = userInfo;
       return new Promise((resolve, reject) => {
-        apiLogin({ username: username.trim(), password: password }).then(response => {
-          const { data } = response;
-          this.token = data.token;
-          setToken(data.token);
-          resolve();
-        }).catch(error => {
-          reject(error);
-        });
+        apiLogin({ email: email.trim(), password: password })
+          .then(({ data }) => {
+            const { user, access_token } = data;
+            this.setAuth(user, access_token);
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
       });
     },
 
-    // get user info
+    // 사용자 정보 조회
     getInfo() {
       return new Promise((resolve, reject) => {
-        apiGetInfo(this.token).then(response => {
-          const { data } = response;
+        if (!this.accessToken) {
+          reject('No access token found.');
+          return;
+        }
 
-          if (!data) {
-            reject('Verification failed, please Login again.');
-          }
+        apiGetInfo()
+          .then((response) => {
+            const { data } = response;
+            if (!data) {
+              reject('Verification failed, please Login again.');
+              return;
+            }
 
-          const { roles, name, avatar, introduction } = data;
+            const { roles } = data;
+            if (!roles || roles.length <= 0) {
+              reject('getInfo: roles must be a non-null array!');
+              return;
+            }
 
-          // roles must be a non-empty array
-          if (!roles || roles.length <= 0) {
-            reject('getInfo: roles must be a non-null array!');
-          }
-
-          this.roles = roles;
-          this.name = name;
-          this.avatar = avatar;
-          this.introduction = introduction;
-          resolve(data);
-        }).catch(error => {
-          reject(error);
-        });
+            if (this.accessToken) {
+              this.setAuth(data, this.accessToken);
+            } else {
+              reject('No access token found.');
+            }
+            resolve(data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
       });
     },
 
-    // user logout
-    logout():Promise<void> {
+    // 로그아웃
+    logout(): Promise<void> {
       return new Promise((resolve, reject) => {
-        apiLogout(this.token).then(() => {
-          this.token = '';
-          this.roles = [];
-          removeToken();
-          resetRouter();
-
-          // reset visited views and cached views
-          // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
-          tagsViewStore().delAllViews();
-
-          resolve();
-        }).catch(error => {
-          reject(error);
-        });
+        apiLogout()
+          .then(() => {
+            this.clearAuth();
+            resetRouter();
+            tagsViewStore().delAllViews();
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
       });
     },
 
-    // remove token
+    // 토큰 리셋
     resetToken() {
-      this.token = '';
-      this.roles = [];
-      removeToken();
+      this.clearAuth();
     },
 
-    // dynamically modify permissions
+    // 권한 변경
     async changeRoles(role) {
-      const token = role + '-token';
+      try {
+        const infoRes = await this.getInfo();
+        resetRouter();
 
-      this.token = token;
-      setToken(token);
+        const accessRoutes = await permissionStore().generateRoutes(this.roles);
+        accessRoutes.forEach((item) => {
+          router.addRoute(item);
+        });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const infoRes = await this.getInfo() as any;
-      let roles = [];
-      if (infoRes.roles) {
-        roles = infoRes.roles;
+        tagsViewStore().delAllViews();
+      } catch (error) {
+        console.error('Error changing roles:', error);
+        throw error;
       }
-
-      resetRouter();
-
-      // generate accessible routes map based on roles
-      const accessRoutes = await permissionStore().generateRoutes(roles);
-      // dynamically add accessible routes
-      // router.addRoutes(accessRoutes);
-      accessRoutes.forEach(item => {
-        router.addRoute(item);
-      });
-
-      // reset visited views and cached views
-      tagsViewStore().delAllViews();
     }
   }
 });

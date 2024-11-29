@@ -7,11 +7,11 @@
         <h3 class="title">Login Form</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="email">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input ref="username" v-model="loginForm.username" placeholder="Username" name="username" type="text"
+        <el-input ref="email" v-model="loginForm.email" placeholder="email" name="email" type="text"
           tabindex="1" autocomplete="on" />
       </el-form-item>
 
@@ -34,12 +34,12 @@
 
       <div style="position:relative">
         <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
+          <span>Email : admin@example.com</span>
+          <span>Password : password123</span>
         </div>
         <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
+          <span style="margin-right:18px;">Email : user@example.com</span>
+          <span>Password : password123</span>
         </div>
 
         <el-button class="thirdparty-button" type="primary" @click="showDialog = true">
@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { validUsername } from '@/utils/validate';
+import { validEmail } from '@/utils/validate';
 import { defineComponent } from 'vue';
 import SocialSign from './components/SocialSignin.vue';
 import type { FormItemRule } from 'element-plus';
@@ -75,8 +75,8 @@ export default defineComponent({
   name: 'Login',
   components: { SocialSign },
   data() {
-    const validateUsername: FormItemRule['validator'] = (_rule, value, callback) => {
-      if (!validUsername(value)) {
+    const validateEmail: FormItemRule['validator'] = (_rule, value, callback) => {
+      if (!validEmail(value)) {
         callback(new Error('Please enter the correct user name'));
       } else {
         callback();
@@ -91,11 +91,11 @@ export default defineComponent({
     };
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        email: 'admin@example.com',
+        password: 'password123'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        email: [{ required: true, trigger: 'blur', validator: validateEmail }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
@@ -122,8 +122,8 @@ export default defineComponent({
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      (this.$refs.username as HTMLElement).focus();
+    if (this.loginForm.email === '') {
+      (this.$refs.email as HTMLElement).focus();
     } else if (this.loginForm.password === '') {
       (this.$refs.password as HTMLElement).focus();
     }

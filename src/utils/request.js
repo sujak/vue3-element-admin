@@ -1,83 +1,85 @@
 import axios from 'axios';
-import store from '@/store';
-import { getToken } from '@/utils/auth';
+import modules from '@/store';
 
-// create an axios instance
+// import { getToken } from '@/utils/auth';
+
+// axios 인스턴스 생성
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  baseURL: process.env.VUE_APP_BASE_API,
+  withCredentials: true, // 쿠키 전송을 위해 필요
+  timeout: 5000
 });
 
-// request interceptor
-service.interceptors.request.use(
-  config => {
-    // do something before request is sent
+// store 인스턴스 가져오기
+const getUserStore = () => {
+  return modules.user();
+};
 
-    if (store.user().token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken();
+// 요청 인터셉터
+service.interceptors.request.use(
+  (config) => {
+    const userStore = getUserStore();
+    if (userStore.accessToken) {
+      config.headers.Authorization = `Bearer ${userStore.accessToken}`;
     }
     return config;
   },
-  error => {
-    // do something with request error
-    console.log(error); // for debug
+  (error) => {
+    console.log(error);
     return Promise.reject(error);
   }
 );
 
-// response interceptor
+// 응답 인터셉터
 service.interceptors.response.use(
-  /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
-
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
-  response => {
+  (response) => {
     const res = response.data;
-
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
-      ElMessage({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      });
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        ElMessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          store.user().resetToken();
-          location.reload();
-        });
-      }
-      return Promise.reject(new Error(res.message || 'Error'));
-    } else {
-      return res;
+    // API 응답이 success: false인 경우 에러 처리
+    if (!res.success) {
+      ElMessage.error(res.message || '에러가 발생했습니다');
+      return Promise.reject(new Error(res.message || '에러가 발생했습니다'));
     }
+
+    // success: true인 경우 data만 반환
+    return res;
   },
-  error => {
-    console.log('err' + error); // for debug
+  async (error) => {
+    const originalRequest = error.config;
+    const userStore = getUserStore();
+
+    // 액세스 토큰이 만료되어 401 에러가 발생하고
+    // 아직 재시도하지 않은 요청인 경우
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        // 리프레시 토큰으로 새로운 액세스 토큰 요청
+        const response = await service.post('/auth/refresh');
+        const { access_token } = response.data;
+
+        // 새로운 액세스 토큰을 스토어에 저장
+        userStore.accessToken = access_token;
+
+        // 원래 요청의 헤더 업데이트
+        originalRequest.headers.Authorization = `Bearer ${access_token}`;
+
+        // 원래 요청 재시도
+        return service(originalRequest);
+      } catch (refreshError) {
+        // 리프레시 토큰도 만료되었거나 유효하지 않은 경우
+        userStore.clearAuth();
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      }
+    }
+
+    const message = error.response?.data?.message || error.message || 'Error';
     ElMessage({
-      message: error.message,
+      message: message,
       type: 'error',
       duration: 5 * 1000
     });
     return Promise.reject(error);
   }
 );
-
 export default service;
