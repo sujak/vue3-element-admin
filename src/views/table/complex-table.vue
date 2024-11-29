@@ -36,51 +36,51 @@
       @sort-change="sortChange"
     >
       <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Date" width="150px" align="center">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span>{{ parseTime(row.timestamp, '{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Title" min-width="150px">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
           <el-tag>{{ typeFilter(row.type) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Author" width="110px" align="center">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span>{{ row.author }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span style="color:red;">{{ row.reviewer }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Imp" width="80px">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <svg-icon v-for="n in row.importance" :key="n" icon-class="star" class="meta-item__icon" />
         </template>
       </el-table-column>
       <el-table-column label="Readings" align="center" width="95">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="Status" class-name="status-col" width="100">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <el-tag :type="statusFilter(row.status)">
             {{ row.status }}
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
-        <template v-slot="{row,$index}">
+        <template #default="{row,$index}">
           <el-button type="primary" size="small" @click="handleUpdate(row)">
             Edit
           </el-button>

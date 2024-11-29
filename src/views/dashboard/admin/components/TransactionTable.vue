@@ -1,17 +1,17 @@
 <template>
   <el-table :data="list" style="width: 100%;padding-top: 15px;">
     <el-table-column label="Order_No" min-width="200">
-      <template v-slot="scope">
+      <template #default="scope">
         {{ displayOrderNo(scope) }}
       </template>
     </el-table-column>
     <el-table-column label="Price" width="195" align="center">
-      <template v-slot="scope">
+      <template #default="scope">
         ¥{{ displayPrice(scope) }}
       </template>
     </el-table-column>
     <el-table-column label="Status" width="100" align="center">
-      <template v-slot="{ row }">
+      <template #default="{ row }">
         <el-tag :type="displayType(row)">
           {{ row.status }}
         </el-tag>

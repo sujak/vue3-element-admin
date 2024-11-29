@@ -8,7 +8,7 @@ const componentsRouter = {
   redirect: 'noRedirect',
   name: 'ComponentDemo',
   meta: {
-    title: '组件',
+    title: '컴포넌트',
     icon: 'component'
   },
   children: [
@@ -16,55 +16,55 @@ const componentsRouter = {
       path: 'tinymce',
       component: () => import('@/views/components-demo/tinymce.vue'),
       name: 'TinymceDemo',
-      meta: { title: '富文本编辑器' }
+      meta: { title: '리치 텍스트 편집기' }
     },
     {
       path: 'avatar-upload',
       component: () => import('@/views/components-demo/avatar-upload.vue'),
       name: 'AvatarUploadDemo',
-      meta: { title: '头像上传' }
+      meta: { title: '아바타 업로드' }
     },
     {
       path: 'dropzone',
       component: () => import('@/views/components-demo/dropzone.vue'),
       name: 'DropzoneDemo',
-      meta: { title: 'Dropzone' }
+      meta: { title: '드롭존' }
     },
     {
       path: 'sticky',
       component: () => import('@/views/components-demo/sticky.vue'),
       name: 'StickyDemo',
-      meta: { title: 'Sticky' }
+      meta: { title: '스티키' }
     },
     {
       path: 'count-to',
       component: () => import('@/views/components-demo/count-to.vue'),
       name: 'CountToDemo',
-      meta: { title: 'Count To' }
+      meta: { title: '카운트 투' }
     },
     {
       path: 'mixin',
       component: () => import('@/views/components-demo/mixin.vue'),
       name: 'ComponentMixinDemo',
-      meta: { title: '小组件' }
+      meta: { title: '작은 컴포넌트' }
     },
     {
       path: 'back-to-top',
       component: () => import('@/views/components-demo/back-to-top.vue'),
       name: 'BackToTopDemo',
-      meta: { title: '返回顶部' }
+      meta: { title: '맨 위로' }
     },
     {
       path: 'drag-dialog',
       component: () => import('@/views/components-demo/drag-dialog.vue'),
       name: 'DragDialogDemo',
-      meta: { title: '拖拽 Dialog' }
+      meta: { title: '드래그 다이얼로그' }
     },
     {
       path: 'drag-select',
       component: () => import('@/views/components-demo/drag-select.vue'),
       name: 'DragSelectDemo',
-      meta: { title: '拖拽 Select' }
+      meta: { title: '드래그 셀렉트' }
     }
   ]
 };

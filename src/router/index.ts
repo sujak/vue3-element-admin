@@ -14,10 +14,10 @@ import tableRouter from './modules/table';
 
 /**
  * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
+ * 권한 요구 사항이 없는 기본 페이지
+ * 모든 역할이 접근할 수 있습니다
  *
- * 注意：hidden、alwaysShow 属性配置移动到了meta中！！！
+ * 주의: hidden, alwaysShow 속성 설정이 meta로 이동되었습니다!!!
  */
 export const constantRoutes:RouteRecordRaw[] = [
   {
@@ -60,7 +60,7 @@ export const constantRoutes:RouteRecordRaw[] = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index.vue'),
         name: 'Dashboard',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
+        meta: { title: '홈', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -72,7 +72,7 @@ export const constantRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/documentation/index.vue'),
         name: 'Documentation',
-        meta: { title: '文档', icon: 'documentation', affix: true }
+        meta: { title: '문서', icon: 'documentation', affix: true }
       }
     ]
   },
@@ -85,7 +85,7 @@ export const constantRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/guide/index.vue'),
         name: 'Guide',
-        meta: { title: '引导页', icon: 'guide', noCache: true }
+        meta: { title: '가이드', icon: 'guide', noCache: true }
       }
     ]
   },
@@ -99,7 +99,7 @@ export const constantRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/profile/index.vue'),
         name: 'Profile',
-        meta: { title: '个人中心', icon: 'user', noCache: true }
+        meta: { title: '개인 정보', icon: 'user', noCache: true }
       }
     ]
   }
@@ -107,9 +107,9 @@ export const constantRoutes:RouteRecordRaw[] = [
 
 /**
  * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
+ * 사용자 역할에 따라 동적으로 로드해야 하는 경로
  *
- * 注意：hidden、alwaysShow 属性配置移动到了meta中！！！
+ * 주의: hidden, alwaysShow 속성 설정이 meta로 이동되었습니다!!!
  */
 export const asyncRoutes:RouteRecordRaw[] = [
   {
@@ -118,10 +118,10 @@ export const asyncRoutes:RouteRecordRaw[] = [
     redirect: '/permission/page',
     name: 'Permission',
     meta: {
-      alwaysShow: true, // will always show the root menu
-      title: '权限测试页',
+      alwaysShow: true, // 항상 루트 메뉴를 표시합니다
+      title: '권한 테스트 페이지',
       icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['admin', 'editor'] // 루트 네비게이션에 역할을 설정할 수 있습니다
     },
     children: [
       {
@@ -129,8 +129,8 @@ export const asyncRoutes:RouteRecordRaw[] = [
         component: () => import('@/views/permission/page.vue'),
         name: 'PagePermission',
         meta: {
-          title: '页面权限',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: '페이지 권한',
+          roles: ['admin'] // 또는 하위 네비게이션에만 역할을 설정할 수 있습니다
         }
       },
       {
@@ -138,8 +138,8 @@ export const asyncRoutes:RouteRecordRaw[] = [
         component: () => import('@/views/permission/directive.vue'),
         name: 'DirectivePermission',
         meta: {
-          title: '指令权限'
-          // if do not set roles, means: this page does not require permission
+          title: '지시문 권한'
+          // 역할을 설정하지 않으면 이 페이지는 권한이 필요하지 않음을 의미합니다
         }
       },
       {
@@ -147,7 +147,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
         component: () => import('@/views/permission/role.vue'),
         name: 'RolePermission',
         meta: {
-          title: '角色权限',
+          title: '역할 권한',
           roles: ['admin']
         }
       }
@@ -162,12 +162,12 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/icons/index.vue'),
         name: 'Icons',
-        meta: { title: '图标', icon: 'icon', noCache: true }
+        meta: { title: '아이콘', icon: 'icon', noCache: true }
       }
     ]
   },
 
-  // /** when your routing map is too long, you can split it into small modules **/
+  // /** 라우팅 맵이 너무 길면 작은 모듈로 나눌 수 있습니다 **/
   componentsRouter,
   chartsRouter,
   nestedRouter,
@@ -179,7 +179,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
     redirect: '/example/list',
     name: 'Example',
     meta: {
-      title: '综合示例',
+      title: '종합 예제',
       icon: markRaw(IconHelp)
     },
     children: [
@@ -187,19 +187,19 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'create',
         component: () => import('@/views/example/create.vue'),
         name: 'CreateArticle',
-        meta: { title: '创建文章', icon: 'edit' }
+        meta: { title: '기사 작성', icon: 'edit' }
       },
       {
         path: 'edit/:id(\\d+)',
         component: () => import('@/views/example/edit.vue'),
         name: 'EditArticle',
-        meta: { hidden: true, title: '编辑文章', noCache: true, activeMenu: '/example/list' }
+        meta: { hidden: true, title: '기사 편집', noCache: true, activeMenu: '/example/list' }
       },
       {
         path: 'list',
         component: () => import('@/views/example/list.vue'),
         name: 'ArticleList',
-        meta: { title: '文章列表', icon: 'list' }
+        meta: { title: '기사 목록', icon: 'list' }
       }
     ]
   },
@@ -212,7 +212,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/tab/index.vue'),
         name: 'Tab',
-        meta: { title: 'Tabs标签页', icon: 'tab' }
+        meta: { title: '탭', icon: 'tab' }
       }
     ]
   },
@@ -223,7 +223,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
     redirect: 'noRedirect',
     name: 'ErrorPages',
     meta: {
-      title: '错误页面',
+      title: '오류 페이지',
       icon: '404'
     },
     children: [
@@ -250,7 +250,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'log',
         component: () => import('@/views/error-log/index.vue'),
         name: 'ErrorLog',
-        meta: { title: '错误日志', icon: 'bug' }
+        meta: { title: '오류 로그', icon: 'bug' }
       }
     ]
   },
@@ -269,25 +269,25 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'export-excel',
         component: () => import('@/views/excel/export-excel.vue'),
         name: 'ExportExcel',
-        meta: { title: '导出 Excel' }
+        meta: { title: 'Excel 내보내기' }
       },
       {
         path: 'export-selected-excel',
         component: () => import('@/views/excel/select-excel.vue'),
         name: 'SelectExcel',
-        meta: { title: '导出 已选择项' }
+        meta: { title: '선택된 항목 내보내기' }
       },
       {
         path: 'export-merge-header',
         component: () => import('@/views/excel/merge-header.vue'),
         name: 'MergeHeader',
-        meta: { title: '导出 多级表头' }
+        meta: { title: '다중 헤더 내보내기' }
       },
       {
         path: 'upload-excel',
         component: () => import('@/views/excel/upload-excel.vue'),
         name: 'UploadExcel',
-        meta: { title: '上传 Excel' }
+        meta: { title: 'Excel 업로드' }
       }
     ]
   },
@@ -303,7 +303,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'download',
         component: () => import('@/views/zip/index.vue'),
         name: 'ExportZip',
-        meta: { title: '导出 Zip' }
+        meta: { title: 'Zip 내보내기' }
       }
     ]
   },
@@ -335,7 +335,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/theme/index.vue'),
         name: 'Theme',
-        meta: { title: '主题', icon: 'theme' }
+        meta: { title: '테마', icon: 'theme' }
       }
     ]
   },
@@ -348,7 +348,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/clipboard/index.vue'),
         name: 'ClipboardDemo',
-        meta: { title: '剪贴板', icon: 'clipboard' }
+        meta: { title: '클립보드', icon: 'clipboard' }
       }
     ]
   },
@@ -359,7 +359,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
     children: [
       {
         path: 'https://element-plus.midfar.com',
-        meta: { title: '外链', icon: 'link' },
+        meta: { title: '외부 링크', icon: 'link' },
         redirect: ''
       }
     ]
@@ -370,7 +370,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
     component: Layout,
     name: 'MyDemo',
     meta: {
-      title: '我的示例',
+      title: '내 예제',
       icon: 'component'
     },
     children: [
@@ -378,18 +378,18 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'element-demo',
         component: () => import('@/views/mydemo/ElementDemo.vue'),
         name: 'ElementDemo',
-        meta: { title: 'Element 示例', icon: 'skill' }
+        meta: { title: 'Element 예제', icon: 'skill' }
       },
       {
         path: 'store-demo',
         component: () => import('@/views/mydemo/StoreDemo.vue'),
         name: 'StoreDemo',
-        meta: { title: 'Store 示例', icon: 'lock' }
+        meta: { title: 'Store 예제', icon: 'lock' }
       }
     ]
   },
 
-  // 404 page must be placed at the end !!!
+  // 404 페이지는 반드시 마지막에 배치해야 합니다 !!!
   { path: '/:pathMatch(.*)*', redirect: '/404', meta: { hidden: true }}
 ];
 
@@ -397,7 +397,7 @@ console.log('BASE_URL=', import.meta.env);
 
 const createTheRouter = ():Router => createRouter({
   // history: createWebHashHistory(import.meta.env.BASE_URL),
-  // 注意，如果要配置 HTML5 模式，则需要修改nginx配置，参考资料：
+  // 주의: HTML5 모드를 설정하려면 nginx 설정을 수정해야 합니다. 참고 자료:
   // https://router.vuejs.org/zh/guide/essentials/history-mode.html
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior: () => ({ top: 0 }),
@@ -410,10 +410,10 @@ interface RouterPro extends Router {
 
 const router = createTheRouter() as RouterPro;
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+// 자세한 내용은: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createTheRouter() as RouterPro;
-  router.matcher = newRouter.matcher; // reset router
+  router.matcher = newRouter.matcher; // 라우터 재설정
 }
 
 export default router;

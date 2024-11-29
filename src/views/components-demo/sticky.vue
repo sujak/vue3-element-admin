@@ -5,7 +5,7 @@
         <el-button plain>
           Platform<el-icon><IconCaretBottom /></el-icon>
         </el-button>
-        <template v-slot:dropdown>
+        <template #dropdown>
           <el-dropdown-menu class="no-border">
             <el-checkbox-group v-model="platforms" style="padding: 5px 15px;">
               <el-checkbox v-for="item in platformsOptions" :key="item.key" :label="item.name" :value="item.key" />
@@ -18,10 +18,10 @@
         <el-button plain>
           Link<el-icon><IconCaretBottom /></el-icon>
         </el-button>
-        <template v-slot:dropdown>
+        <template #dropdown>
           <el-dropdown-menu class="no-padding no-border" style="width:300px">
             <el-input v-model="url" placeholder="Please enter the content">
-              <template v-slot:prepend>
+              <template #prepend>
                 Url
               </template>
             </el-input>

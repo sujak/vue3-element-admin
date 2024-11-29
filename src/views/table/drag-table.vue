@@ -3,43 +3,43 @@
     <!-- Note that row-key is necessary to get a correct row order. -->
     <el-table ref="dragTable" v-loading="listLoading" :data="list" row-key="id" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="65">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="180px" align="center" label="Date">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span>{{ parseTime( row.timestamp, '{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
 
       <el-table-column min-width="300px" label="Title">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span>{{ row.title }}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="110px" align="center" label="Author">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span>{{ row.author }}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="100px" label="Importance">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <svg-icon v-for="n in row.importance" :key="n" icon-class="star" class="icon-star" />
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Readings" width="95">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <span>{{ row.pageviews }}</span>
         </template>
       </el-table-column>
 
       <el-table-column class-name="status-col" label="Status" width="110">
-        <template v-slot="{row}">
+        <template #default="{row}">
           <el-tag :type="statusFilter(row.status)">
             {{ row.status }}
           </el-tag>
@@ -47,7 +47,7 @@
       </el-table-column>
 
       <el-table-column align="center" label="Drag" width="80">
-        <template v-slot="{}">
+        <template #default="{}">
           <svg-icon class="drag-handler" icon-class="drag" />
         </template>
       </el-table-column>

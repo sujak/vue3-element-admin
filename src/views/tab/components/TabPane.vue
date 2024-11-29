@@ -7,44 +7,44 @@
       width="65"
       element-loading-text="请给我点时间！"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ scope.row.id }}</span>
       </template>
     </el-table-column>
 
     <el-table-column width="180px" align="center" label="Date">
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ parseTime(scope.row.timestamp,'{y}-{m}-{d} {h}:{i}') }}</span>
       </template>
     </el-table-column>
 
     <el-table-column min-width="300px" label="Title">
-      <template v-slot="{row}">
+      <template #default="{row}">
         <span>{{ row.title }}</span>
         <el-tag>{{ row.type }}</el-tag>
       </template>
     </el-table-column>
 
     <el-table-column width="110px" align="center" label="Author">
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ scope.row.author }}</span>
       </template>
     </el-table-column>
 
     <el-table-column width="120px" label="Importance">
-      <template v-slot="scope">
+      <template #default="scope">
         <svg-icon v-for="n in scope.row.importance" :key="n" icon-class="star" />
       </template>
     </el-table-column>
 
     <el-table-column align="center" label="Readings" width="95">
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ scope.row.pageviews }}</span>
       </template>
     </el-table-column>
 
     <el-table-column class-name="status-col" label="Status" width="110">
-      <template v-slot="{row}">
+      <template #default="{row}">
         <el-tag :type="statusFilter(row.status)">
           {{ row.status }}
         </el-tag>

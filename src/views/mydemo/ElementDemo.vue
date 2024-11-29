@@ -22,9 +22,9 @@ console.log('appStore.device=', useAppStore.device);
 <template>
   <div class="app-container">
     <div class="mytitle">
-      <span class="text">获取环境变量</span>
+      <span class="text">환경 변수 가져오기</span>
     </div>
-    <div>element按钮示例</div>
+    <div>Element 버튼 예제</div>
     <div class="button-example">
       <el-row class="mb-4">
         <el-button>Default</el-button>
@@ -63,10 +63,10 @@ console.log('appStore.device=', useAppStore.device);
       </el-row>
     </div>
     <div>&nbsp;</div>
-    <div>element图标示例</div>
+    <div>Element 아이콘 예제</div>
     <div style="font-size: 20px;">
-      <!-- 由于SVG图标默认不携带任何属性 -->
-      <!-- 你需要直接提供它们 -->
+      <!-- SVG 아이콘은 기본적으로 속성을 포함하지 않으므로 -->
+      <!-- 직접 제공해야 합니다 -->
       <Edit style="width: 1em; height: 1em; margin-right: 8px" />
       <Star style="width: 1em; height: 1em; margin-right: 8px" />
       <Delete style="width: 1em; height: 1em; margin-right: 8px" />

@@ -7,7 +7,7 @@
     </el-badge>
 
     <el-dialog v-model="dialogTableVisible" width="80%" append-to-body>
-      <template v-slot:title>
+      <template #title>
         <div class="text-title">
           <span style="padding-right: 10px;">Error Log</span>
           <el-button size="small" type="primary" :icon="IconDelete" @click="clearAll">Clear All</el-button>
@@ -15,7 +15,7 @@
       </template>
       <el-table :data="errorLogs" border>
         <el-table-column label="Message">
-          <template v-slot="{row}">
+          <template #default="{row}">
             <div>
               <span class="message-title">Msg:</span>
               <el-tag type="danger">
@@ -39,7 +39,7 @@
           </template>
         </el-table-column>
         <el-table-column label="Stack">
-          <template v-slot="scope">
+          <template #default="scope">
             {{ scope.row.err.stack }}
           </template>
         </el-table-column>

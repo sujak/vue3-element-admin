@@ -2,7 +2,7 @@
   <div class="mixin-components-container">
     <el-row>
       <el-card class="box-card">
-        <template v-slot:header>
+        <template #header>
           <div class="clearfix">
             <span>Buttons</span>
           </div>
@@ -45,7 +45,7 @@
     <el-row :gutter="20" style="margin-top:50px;">
       <el-col :span="6">
         <el-card class="box-card">
-          <template v-slot:header>
+          <template #header>
             <div class="clearfix">
               <span>Material Design 的input</span>
             </div>
@@ -53,8 +53,8 @@
           <div style="height:100px;">
             <el-form :model="demo" :rules="demoRules">
               <el-form-item prop="title">
-                <md-input v-model="demo.title" :icon="IconSearch" name="title" placeholder="输入标题">
-                  标题
+                <md-input v-model="demo.title" :icon="IconSearch" name="title" placeholder="제목 입력">
+                  제목
                 </md-input>
               </el-form-item>
             </el-form>
@@ -64,9 +64,9 @@
 
       <el-col :span="6">
         <el-card class="box-card">
-          <template v-slot:header>
+          <template #header>
             <div class="clearfix">
-              <span>图片hover效果</span>
+                <span>이미지 호버 효과</span>
             </div>
           </template>
           <div class="component-item">
@@ -79,22 +79,22 @@
 
       <el-col :span="6">
         <el-card class="box-card">
-          <template v-slot:header>
+            <template #header>
             <div class="clearfix">
-              <span>水波纹 waves v-directive</span>
+              <span>물결 효과 waves v-directive</span>
             </div>
-          </template>
-          <div class="component-item">
+            </template>
+            <div class="component-item">
             <el-button type="primary">
-              <span class="text" v-waves>水波纹效果</span>
+              <span class="text" v-waves>물결 효과</span>
             </el-button>
-          </div>
+            </div>
         </el-card>
       </el-col>
 
       <el-col :span="6">
         <el-card class="box-card">
-          <template v-slot:header>
+          <template #header>
             <div class="clearfix">
               <span>hover text</span>
             </div>
@@ -109,13 +109,13 @@
     <el-row :gutter="20" style="margin-top:50px;">
       <el-col :span="8">
         <el-card class="box-card">
-          <template v-slot:header>
+          <template #header>
             <div class="clearfix">
               <span>Share</span>
             </div>
           </template>
           <div class="component-item" style="height:420px;">
-            <dropdown-menu :items="articleList" style="margin:0 auto;" title="系列文章" />
+            <dropdown-menu :items="articleList" style="margin:0 auto;" title="시리즈 기사" />
           </div>
         </el-card>
       </el-col>
@@ -146,7 +146,7 @@ export default defineComponent({
   data() {
     const validate = (rule, value, callback) => {
       if (value.length !== 6) {
-        callback(new Error('请输入六个字符'));
+        callback(new Error('여섯 글자를 입력하세요'));
       } else {
         callback();
       }
@@ -160,12 +160,12 @@ export default defineComponent({
         title: [{ required: true, trigger: 'change', validator: validate }]
       },
       articleList: [
-        { title: '基础篇', href: 'https://juejin.im/post/59097cd7a22b9d0065fb61d2' },
-        { title: '登录权限篇', href: 'https://juejin.im/post/591aa14f570c35006961acac' },
-        { title: '实战篇', href: 'https://juejin.im/post/593121aa0ce4630057f70d35' },
-        { title: 'vue-admin-template 篇', href: 'https://juejin.im/post/595b4d776fb9a06bbe7dba56' },
-        { title: 'v4.0 篇', href: 'https://juejin.im/post/5c92ff94f265da6128275a85' },
-        { title: '优雅的使用 icon', href: 'https://juejin.im/post/59bb864b5188257e7a427c09' }
+        { title: '기초편', href: 'https://juejin.im/post/59097cd7a22b9d0065fb61d2' },
+        { title: '로그인 권한편', href: 'https://juejin.im/post/591aa14f570c35006961acac' },
+        { title: '실전편', href: 'https://juejin.im/post/593121aa0ce4630057f70d35' },
+        { title: 'vue-admin-template 편', href: 'https://juejin.im/post/595b4d776fb9a06bbe7dba56' },
+        { title: 'v4.0 편', href: 'https://juejin.im/post/5c92ff94f265da6128275a85' },
+        { title: '우아하게 아이콘 사용하기', href: 'https://juejin.im/post/59bb864b5188257e7a427c09' }
       ]
     };
   }

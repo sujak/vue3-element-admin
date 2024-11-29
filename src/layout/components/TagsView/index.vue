@@ -3,7 +3,7 @@
     <scroll-pane ref="scrollPane" class="tags-view-wrapper" @scroll="handleScroll">
       <router-link v-for="tag in visitedViews" :key="tag.path"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }" custom
-        v-slot="{ navigate, isActive, isExactActive }" ref="tag">
+        #default="{ navigate, isActive, isExactActive }" ref="tag">
         <span :class="['tags-view-item', isActive && 'router-link-active', isExactActive && 'router-link-exact-active']"
           @click="navigate"
           @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
@@ -14,10 +14,10 @@
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">刷新</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭</li>
-      <li @click="closeOthersTags">关闭其它</li>
-      <li @click="closeAllTags(selectedTag)">关闭全部</li>
+      <li @click="refreshSelectedTag(selectedTag)">새로 고침</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">닫기</li>
+      <li @click="closeOthersTags">다른 태그 닫기</li>
+      <li @click="closeAllTags(selectedTag)">모두 닫기</li>
     </ul>
   </div>
 </template>

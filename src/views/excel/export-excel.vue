@@ -15,27 +15,27 @@
 
     <el-table v-loading="listLoading" :data="list" element-loading-text="Loading..." border fit highlight-current-row>
       <el-table-column align="center" label="Id" width="95">
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.$index }}
         </template>
       </el-table-column>
       <el-table-column label="Title">
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
       <el-table-column label="Author" width="110" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           <el-tag>{{ scope.row.author }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Readings" width="115" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.pageviews }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="Date" width="220">
-        <template v-slot="scope">
+        <template #default="scope">
           <el-icon><IconTimer /></el-icon>
           <span>{{ parseTime(scope.row.timestamp, '{y}-{m}-{d} {h}:{i}') }}</span>
         </template>

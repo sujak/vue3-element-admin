@@ -30,10 +30,10 @@ export default defineComponent({
     return {
       dialogTableVisible: false,
       options: [
-        { value: '选项1', label: '黄金糕' },
-        { value: '选项2', label: '双皮奶' },
-        { value: '选项3', label: '蚵仔煎' },
-        { value: '选项4', label: '龙须面' }
+        { value: 'option1', label: '황금 케이크' },
+        { value: 'option2', label: '쌍피 우유' },
+        { value: 'option3', label: '굴전' },
+        { value: 'option4', label: '용수면' }
       ],
       value: '',
       gridData: [{

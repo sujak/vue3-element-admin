@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
     <div>Store Demo</div>
-    <div>1. 使用 mapStores 然后调用 this.xxxStore.yyy </div>
-    <div>2. 使用 mapState 然后调用 this.xxx </div>
-    <div>3. 调用函数 const xxxStore = store.xxx() 然后可以使用xxxStore变量</div>
+    <div>1. mapStores를 사용하여 this.xxxStore.yyy 호출</div>
+    <div>2. mapState를 사용하여 this.xxx 호출</div>
+    <div>3. 함수를 호출하여 const xxxStore = store.xxx() 그런 다음 xxxStore 변수를 사용할 수 있습니다</div>
     <div>&nbsp;</div>
     <div>========</div>
-    <div>以下是变量显示值，具体用法参考源代码</div>
+    <div>아래는 변수 표시 값입니다. 구체적인 사용법은 소스 코드를 참조하세요</div>
     <div>userStore.name={{ userStore.name }}</div>
     <div>appStore.device={{ device }}</div>
     <div><el-button @click="handleToggleDevice">toggleDevice</el-button></div>
