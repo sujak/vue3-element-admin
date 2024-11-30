@@ -5,30 +5,19 @@ import type { RouteRecordRaw } from 'vue-router';
 interface IPermissionState {
   routes: Array<RouteRecordRaw>;
   addRoutes: Array<RouteRecordRaw>;
+  isRoutesGenerated: boolean;
 }
 
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
 function hasPermission(roles:string[], route:RouteRecordRaw):boolean {
   if (route.meta && route.meta.roles) {
     const rolesArr = route.meta.roles as string[];
     return roles.some(role => rolesArr.includes(role));
-  } else {
-    return true;
   }
+  return true;
 }
 
-/**
- * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
- */
 export function filterAsyncRoutes(routes:RouteRecordRaw[], roles: string[]): Array<RouteRecordRaw> {
   const res:Array<RouteRecordRaw> = [];
-
   routes.forEach(route => {
     const tmp = { ...route };
     if (hasPermission(roles, tmp)) {
@@ -38,7 +27,6 @@ export function filterAsyncRoutes(routes:RouteRecordRaw[], roles: string[]): Arr
       res.push(tmp);
     }
   });
-
   return res;
 }
 
@@ -46,14 +34,23 @@ export default defineStore({
   id: 'permission',
   state: ():IPermissionState => ({
     routes: [],
-    addRoutes: []
+    addRoutes: [],
+    isRoutesGenerated: false
   }),
-  getters: {},
+
   actions: {
     setRoutes(routes: RouteRecordRaw[]) {
       this.addRoutes = routes;
       this.routes = constantRoutes.concat(routes);
+      this.isRoutesGenerated = true;
     },
+
+    resetRoutes() {
+      this.routes = [];
+      this.addRoutes = [];
+      this.isRoutesGenerated = false;
+    },
+
     generateRoutes(roles: string[]) {
       let accessedRoutes;
       if (roles.includes('admin')) {

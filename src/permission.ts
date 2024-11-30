@@ -14,38 +14,35 @@ router.beforeEach(async (to, from, next) => {
   document.title = getPageTitle(to.meta.title);
 
   const store = userStore();
-  const isAuthenticated = store.isLoggedIn; // 새로 추가된 getter 사용
+  const isAuthenticated = store.isLoggedIn;
 
   if (isAuthenticated) {
     if (to.path === '/login') {
       NProgress.done();
       next({ path: '/' });
-    } else {
-      const hasRoles = store.roles && store.roles.length > 0;
-      if (hasRoles) {
-        next();
+      return;
+    }
+
+    try {
+      // 항상 최신 사용자 정보 조회
+      const userInfo = await store.getInfo();
+
+      // 라우트 생성 여부 확인
+      const permission = permissionStore();
+      if (!permission.isRoutesGenerated) {
+        const accessRoutes = await permission.generateRoutes(userInfo.roles);
+        accessRoutes.forEach(route => router.addRoute(route));
+
+        // 현재 페이지로 리다이렉트 (라우트 추가 후)
+        next({ ...to, replace: true });
       } else {
-        try {
-          const infoRes = await store.getInfo();
-          let roles = [];
-          if (infoRes.roles) {
-            roles = infoRes.roles;
-          }
-
-          const accessRoutes = await permissionStore().generateRoutes(roles);
-
-          accessRoutes.forEach(item => {
-            router.addRoute(item);
-          });
-
-          next({ ...to, replace: true });
-        } catch (error) {
-          await store.clearAuth(); // resetToken 대신 clearAuth 사용
-          ElMessage.error(error.message || '인증 오류가 발생했습니다');
-          NProgress.done();
-          next(`/login?redirect=${to.path}`);
-        }
+        next();
       }
+    } catch (error) {
+      await store.clearAuth();
+      ElMessage.error(error.message || '인증 오류가 발생했습니다');
+      NProgress.done();
+      next(`/login?redirect=${to.path}`);
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { PersistOptions } from 'pinia-plugin-persistedstate';
+import type { PersistenceOptions } from 'pinia-plugin-persistedstate'
 import { login as apiLogin, logout as apiLogout, getInfo as apiGetInfo } from '@/api/user';
 import router, { resetRouter } from '@/router';
 import tagsViewStore from './tagsView';
@@ -9,6 +9,7 @@ export interface IUserState {
   accessToken: string | null;
   userId: string;
   name: string;
+  email: string;
   avatar: string;
   introduction: string;
   roles: string[];
@@ -21,6 +22,7 @@ export default defineStore({
     accessToken: null,
     userId: '',
     name: '',
+    email: '',
     avatar: '',
     introduction: '',
     roles: [],
@@ -31,10 +33,11 @@ export default defineStore({
     key: 'user-store',
     storage: localStorage,
     paths: ['accessToken', 'userId', 'name', 'avatar', 'introduction', 'roles', 'isAuthenticated']
-  } satisfies PersistOptions<IUserState>,
+  } as PersistenceOptions<IUserState>,
 
   getters: {
-    isLoggedIn: (state) => state.isAuthenticated && !!state.accessToken
+    isLoggedIn: (state) => state.isAuthenticated && !!state.accessToken,
+    isAdmin: (state) => state.roles.includes('ADMIN')
   },
 
   actions: {
@@ -42,6 +45,7 @@ export default defineStore({
       this.accessToken = accessToken;
       this.userId = userData.id;
       this.name = userData.name;
+      this.email = userData.email;
       this.avatar = userData.avatar;
       this.introduction = userData.introduction;
       this.roles = userData.roles.map((role) => role.code);
@@ -52,6 +56,7 @@ export default defineStore({
       this.accessToken = null;
       this.userId = '';
       this.name = '';
+      this.email = '';
       this.avatar = '';
       this.introduction = '';
       this.roles = [];

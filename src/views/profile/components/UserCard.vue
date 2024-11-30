@@ -18,15 +18,14 @@
         <div class="user-role text-center text-muted">{{ uppercaseFirst(user.role) }}</div>
       </div>
     </div>
-
     <div class="user-bio">
-      <div class="user-education user-bio-section">
+      <div class="user-bio-section">
         <div class="user-bio-section-header">
-          <svg-icon icon-class="education" /><span>Education</span>
+          <svg-icon icon-class="people" /><span>Bio</span>
         </div>
         <div class="user-bio-section-body">
           <div class="text-muted">
-            JS in Computer Science from the University of Technology
+            {{ user.introduction }}
           </div>
         </div>
       </div>
@@ -73,7 +72,8 @@ export default defineComponent({
           name: '',
           email: '',
           avatar: '',
-          role: ''
+          introduction: '',
+          role: '',
         };
       }
     }

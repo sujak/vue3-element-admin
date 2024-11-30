@@ -1,13 +1,18 @@
 <template>
   <el-table :data="list" style="width: 100%;padding-top: 15px;">
-    <el-table-column label="Order_No" min-width="200">
-      <template #default="scope">
-        {{ displayOrderNo(scope) }}
+    <el-table-column label="id" min-width="20">
+      <template #default="{ row }">
+        {{ row.id }}
       </template>
     </el-table-column>
-    <el-table-column label="Price" width="195" align="center">
+    <el-table-column label="name" min-width="100">
+      <template #default="{ row }">
+        {{ row.name }}
+      </template>
+    </el-table-column>
+    <el-table-column label="Email" width="195" align="center">
       <template #default="scope">
-        ¥{{ displayPrice(scope) }}
+        {{ scope.row.email }}
       </template>
     </el-table-column>
     <el-table-column label="Status" width="100" align="center">
@@ -53,11 +58,12 @@ export default defineComponent({
       return toThousandFilter(scope.row.price);
     },
     displayType(row) {
-      return this.statusFilter(row.status);
+      return this.statusFilter(row.is_active);
     },
     fetchData() {
       transactionList().then(response => {
-        this.list = response.data.items.slice(0, 8);
+        console.log(response.data)
+        this.list = response.data.slice(0, 8);
       });
     }
   }

@@ -2,6 +2,7 @@ import { markRaw } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router'; // createWebHashHistory, createWebHistory
 import type { Router, RouteRecordRaw, RouteComponent } from 'vue-router';
 import { Help as IconHelp } from '@element-plus/icons-vue';
+import permissionStore from '../store/modules/permission';
 
 /* Layout */
 const Layout = ():RouteComponent => import('@/layout/index.vue');
@@ -121,7 +122,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
       alwaysShow: true, // 항상 루트 메뉴를 표시합니다
       title: '권한 테스트 페이지',
       icon: 'lock',
-      roles: ['admin', 'editor'] // 루트 네비게이션에 역할을 설정할 수 있습니다
+      roles: ['ADMIN', 'editor'] // 루트 네비게이션에 역할을 설정할 수 있습니다
     },
     children: [
       {
@@ -130,7 +131,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
         name: 'PagePermission',
         meta: {
           title: '페이지 권한',
-          roles: ['admin'] // 또는 하위 네비게이션에만 역할을 설정할 수 있습니다
+          roles: ['ADMIN'] // 또는 하위 네비게이션에만 역할을 설정할 수 있습니다
         }
       },
       {
@@ -148,7 +149,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
         name: 'RolePermission',
         meta: {
           title: '역할 권한',
-          roles: ['admin']
+          roles: ['ADMIN']
         }
       }
     ]
@@ -413,7 +414,10 @@ const router = createTheRouter() as RouterPro;
 // 자세한 내용은: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createTheRouter() as RouterPro;
-  router.matcher = newRouter.matcher; // 라우터 재설정
+  router.matcher = newRouter.matcher;
+  // 권한 라우트 초기화
+  const permission = permissionStore();
+  permission.resetRoutes();
 }
 
 export default router;
