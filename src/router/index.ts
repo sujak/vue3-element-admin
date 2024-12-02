@@ -114,6 +114,52 @@ export const constantRoutes:RouteRecordRaw[] = [
  */
 export const asyncRoutes:RouteRecordRaw[] = [
   {
+    path: '/authorization',
+    component: Layout,
+    redirect: '/authorization/department',
+    name: 'Authorization',
+    meta: {
+      alwaysShow: true, // 항상 루트 메뉴를 표시합니다
+      title: '권한 관리',
+      icon: 'lock',
+      roles: ['ADMIN']
+    },
+    children: [
+      {
+        path: 'department',
+        component: () => import('@/views/Authorization/Department/Department.vue'),
+        name: 'Department',
+        meta: {
+          title: '부서 관리'
+        }
+      },
+      {
+        path: 'user',
+        component: () => import('@/views/Authorization/User/User.vue'),
+        name: 'User',
+        meta: {
+          title: '사용자 관리'
+        }
+      },
+      // {
+      //   path: 'menu',
+      //   component: () => import('@/views/Authorization/Menu/Menu.vue'),
+      //   name: 'Menu',
+      //   meta: {
+      //     title: '메뉴 관리'
+      //   }
+      // },
+      // {
+      //   path: 'role',
+      //   component: () => import('@/views/Authorization/Role/Role.vue'),
+      //   name: 'Role',
+      //   meta: {
+      //     title: '역할 관리'
+      //   }
+      // }
+    ]
+  },
+  {
     path: '/permission',
     component: Layout,
     redirect: '/permission/page',

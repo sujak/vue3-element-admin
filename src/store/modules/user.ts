@@ -94,9 +94,9 @@ export default defineStore({
               reject('Verification failed, please Login again.');
               return;
             }
+            const roles = data?.roles ? data.roles.map((role) => role.code) : [];
 
-            const { roles } = data;
-            if (!roles || roles.length <= 0) {
+            if (roles.length <= 0) {
               reject('getInfo: roles must be a non-null array!');
               return;
             }
@@ -106,6 +106,7 @@ export default defineStore({
             } else {
               reject('No access token found.');
             }
+            data.roles = roles;
             resolve(data);
           })
           .catch((error) => {
@@ -140,7 +141,6 @@ export default defineStore({
       try {
         const infoRes = await this.getInfo();
         resetRouter();
-
         const accessRoutes = await permissionStore().generateRoutes(this.roles);
         accessRoutes.forEach((item) => {
           router.addRoute(item);
