@@ -24,12 +24,11 @@ router.beforeEach(async (to, from, next) => {
     }
 
     try {
-      // 항상 최신 사용자 정보 조회
-      const userInfo = await store.getInfo();
 
       // 라우트 생성 여부 확인
       const permission = permissionStore();
       if (!permission.isRoutesGenerated) {
+        const userInfo = await store.getInfo();
         const accessRoutes = await permission.generateRoutes(userInfo.roles);
         accessRoutes.forEach(route => router.addRoute(route));
 

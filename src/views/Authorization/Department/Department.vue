@@ -2,7 +2,11 @@
   <div class="app-container">
     <el-button type="primary">2New Role</el-button>
 
-    <el-table :data="dataList">
+    <el-table :data="dataList"
+      style="width: 100%; margin-bottom: 20px"
+      row-key="id"
+      border
+      >
       <el-table-column type="selection" width="55" />
       <el-table-column property="index" width="55" label="index"/>
       <el-table-column property="id" width="55" label="id"/>

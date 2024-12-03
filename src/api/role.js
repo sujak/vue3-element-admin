@@ -9,7 +9,7 @@ export function getRoutes() {
 
 export function getRoles() {
   return request({
-    url: '/api/v1/codes',
+    url: '/api/v1/codes/tree',
     method: 'get'
   });
 }

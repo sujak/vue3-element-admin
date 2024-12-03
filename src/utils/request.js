@@ -38,6 +38,7 @@ service.interceptors.request.use(
     const userStore = getUserStore();
     if (userStore.accessToken) {
       config.headers.Authorization = `Bearer ${userStore.accessToken}`;
+      console.log('axios - request', config.url, config);
     }
     return config;
   },
@@ -78,7 +79,9 @@ service.interceptors.response.use(
       isRefreshing = true;
 
       try {
+        console.log('refresh-token');
         const response = await service.post('/api/v1/auth/refresh-token');
+        console.log('refresh-token-response', response);
         const { access_token } = response.data;
         userStore.accessToken = access_token;
 
@@ -86,6 +89,7 @@ service.interceptors.response.use(
         processQueue(null, access_token);
         return service(originalRequest);
       } catch (refreshError) {
+        console.log('refresh-token-catch', refreshError);
         processQueue(refreshError, null);
         userStore.clearAuth();
         window.location.href = '/login';

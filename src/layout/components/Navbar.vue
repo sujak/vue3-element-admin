@@ -23,9 +23,7 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar">
-          <el-icon class="el-icon-caret-bottom" size="small">
-            <CaretBottom />
-          </el-icon>
+          <span class="user-name text-center">{{ name }}</span>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
@@ -79,6 +77,7 @@ export default defineComponent({
       'device'
     ]),
     ...mapState(store.user, [
+      'name',
       'avatar'
     ])
   },
@@ -159,20 +158,20 @@ export default defineComponent({
         margin-top: 5px;
         position: relative;
         height: 45px;
+        display: flex;
+        align-items: center;
 
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          width: 25px;
+          height: 25px;
+          border-radius: 50%;
         }
 
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+        .user-name {
+          padding-left: 5px;
+          font-size: 14px;
+          line-height: 1.2;
         }
       }
     }
