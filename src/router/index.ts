@@ -149,14 +149,14 @@ export const asyncRoutes:RouteRecordRaw[] = [
       //     title: '메뉴 관리'
       //   }
       // },
-      // {
-      //   path: 'role',
-      //   component: () => import('@/views/Authorization/Role/Role.vue'),
-      //   name: 'Role',
-      //   meta: {
-      //     title: '역할 관리'
-      //   }
-      // }
+      {
+        path: 'role',
+        component: () => import('@/views/Authorization/Role/Role.vue'),
+        name: 'Role',
+        meta: {
+          title: '역할 관리'
+        }
+      }
     ]
   },
   {
