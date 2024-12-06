@@ -48,6 +48,11 @@ service.interceptors.request.use(
   }
 );
 
+// 리프레시 토큰 요청인지 확인하는 함수
+const isRefreshTokenRequest = (config) => {
+  return config.url === '/api/v1/auth/refresh-token';
+};
+
 // 응답 인터셉터
 service.interceptors.response.use(
   (response) => {
@@ -61,6 +66,13 @@ service.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const userStore = getUserStore();
+
+    // refresh-token 요청 자체가 실패한 경우 바로 로그아웃 처리
+    if (isRefreshTokenRequest(originalRequest)) {
+      userStore.clearAuth();
+      window.location.href = '/login';
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
@@ -81,15 +93,13 @@ service.interceptors.response.use(
       try {
         console.log('refresh-token');
         const response = await service.post('/api/v1/auth/refresh-token');
-        console.log('refresh-token-response', response);
         const { access_token } = response.data;
         userStore.accessToken = access_token;
-
         originalRequest.headers.Authorization = `Bearer ${access_token}`;
         processQueue(null, access_token);
         return service(originalRequest);
       } catch (refreshError) {
-        console.log('refresh-token-catch', refreshError);
+        console.log('refresh-token-error', refreshError);
         processQueue(refreshError, null);
         userStore.clearAuth();
         window.location.href = '/login';

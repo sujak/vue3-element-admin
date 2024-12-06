@@ -18,8 +18,8 @@ export function addRole(data) {
 
 export function updateRole(id, data) {
   return request({
-    url: `/vue-element-admin/role/getUserInfo?id=${id}`,
-    method: 'get',
+    url: `/api/v1/roles/${id}`,
+    method: 'put',
     data
   });
 }

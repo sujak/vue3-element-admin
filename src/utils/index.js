@@ -1,12 +1,34 @@
 /**
- * Created by PanJiaChen on 16/11/18.
- */
-
-/**
- * Parse the time to string
- * @param {(Object|string|number)} time
- * @param {string} cFormat
- * @returns {string | null}
+ * 날짜/시간을 지정된 형식의 문자열로 변환합니다.
+ * @param {(Date|string|number)} time - 변환할 날짜/시간. Date 객체, 타임스탬프(문자열/숫자), ISO 8601 문자열 등을 지원합니다.
+ * @param {string} [cFormat='{y}-{m}-{d} {h}:{i}:{s}'] - 출력 형식. 기본값은 '{y}-{m}-{d} {h}:{i}:{s}'
+ * @returns {string | null} 형식화된 날짜/시간 문자열 또는 잘못된 입력의 경우 null
+ *
+ * @example
+ * // ISO 8601 문자열 변환
+ * parseTime('2024-12-02T12:55:03.338Z')
+ * // 결과: '2024-12-02 12:55:03'
+ *
+ * // 타임스탬프(밀리초) 변환
+ * parseTime(1548221490638)
+ * // 결과: '2019-01-23 11:24:50'
+ *
+ * // Date 객체 변환
+ * parseTime(new Date())
+ * // 결과: '2024-12-06 15:30:00'
+ *
+ * // 커스텀 포맷 사용
+ * parseTime(new Date(), '{y}년 {m}월 {d}일 {h}시 {i}분 {s}초 {a}요일')
+ * // 결과: '2024년 12월 06일 15시 30분 00초 금요일'
+ *
+ * @supported 포맷 파라미터:
+ * - {y}: 년도 (예: 2024)
+ * - {m}: 월 (01-12)
+ * - {d}: 일 (01-31)
+ * - {h}: 시 (00-23)
+ * - {i}: 분 (00-59)
+ * - {s}: 초 (00-59)
+ * - {a}: 요일 (일-토)
  */
 export function parseTime(time, cFormat) {
   if (arguments.length === 0 || !time) {
@@ -14,25 +36,62 @@ export function parseTime(time, cFormat) {
   }
   const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}';
   let date;
+
   if (typeof time === 'object') {
     date = time;
   } else {
-    if ((typeof time === 'string')) {
-      if ((/^[0-9]+$/.test(time))) {
+    if (typeof time === 'string') {
+      if (/^[0-9]+$/.test(time)) {
         // support "1548221490638"
         time = parseInt(time);
+      } else if (time.includes('T') && time.includes('Z')) {
+        // ISO 8601 형식 처리 (2024-12-02T12:55:03.338Z)
+        date = new Date(time);
+        return formatDate(date, format);
       } else {
         // support safari
-        // https://stackoverflow.com/questions/4310953/invalid-date-in-safari
         time = time.replace(new RegExp(/-/gm), '/');
       }
     }
 
-    if ((typeof time === 'number') && (time.toString().length === 10)) {
+    if (typeof time === 'number' && time.toString().length === 10) {
       time = time * 1000;
     }
     date = new Date(time);
   }
+
+  return formatDate(date, format);
+}
+
+/**
+ * 날짜를 지정된 형식의 문자열로 변환합니다.
+ * @param {Date} date - Date 객체
+ * @param {string} format - 출력 형식 문자열
+ * @returns {string} 형식화된 날짜/시간 문자열
+ *
+ * @example
+ * // 기본 날짜 형식
+ * formatDate(new Date(), '{y}-{m}-{d}')
+ * // 결과: '2024-12-06'
+ *
+ * // 요일 포함 형식
+ * formatDate(new Date(), '{y}년 {m}월 {d}일 {a}요일')
+ * // 결과: '2024년 12월 06일 금요일'
+ *
+ * // 시간 포함 형식
+ * formatDate(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
+ * // 결과: '2024-12-06 15:30:25'
+ *
+ * @supported 포맷 파라미터:
+ * - {y}: 년도 (예: 2024)
+ * - {m}: 월 (01-12)
+ * - {d}: 일 (01-31)
+ * - {h}: 시 (00-23)
+ * - {i}: 분 (00-59)
+ * - {s}: 초 (00-59)
+ * - {a}: 요일 (일-토)
+ */
+export function formatDate(date, format) {
   const formatObj = {
     y: date.getFullYear(),
     m: date.getMonth() + 1,
@@ -42,19 +101,30 @@ export function parseTime(time, cFormat) {
     s: date.getSeconds(),
     a: date.getDay()
   };
+
   const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key];
-    // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value]; }
+    if (key === 'a') {
+      return ['일', '월', '화', '수', '목', '금', '토'][value];
+    }
     return value.toString().padStart(2, '0');
   });
   return time_str;
 }
 
 /**
- * @param {number} time
- * @param {string} option
- * @returns {string}
+ * 날짜를 상대적 시간 또는 지정된 형식으로 변환합니다.
+ * @param {number} time - 타임스탬프
+ * @param {string} [option] - 출력 형식 (옵션). 미지정시 상대적 시간 또는 기본 형식으로 출력
+ * @returns {string} 형식화된 날짜/시간 문자열
+ *
+ * @example
+ * // 상대적 시간 표시
+ * formatTime(Date.now() - 1000)     // 결과: '방금 전'
+ * formatTime(Date.now() - 3600000)  // 결과: '1시간 전'
+ *
+ * // 지정된 형식으로 출력
+ * formatTime(Date.now(), '{y}-{m}-{d}')  // 결과: '2024-12-06'
  */
 export function formatTime(time, option) {
   if (('' + time).length === 10) {
@@ -68,29 +138,19 @@ export function formatTime(time, option) {
   const diff = (now - d.getTime()) / 1000;
 
   if (diff < 30) {
-    return '刚刚';
+    return '방금 전';
   } else if (diff < 3600) {
     // less 1 hour
-    return Math.ceil(diff / 60) + '分钟前';
+    return Math.ceil(diff / 60) + '분 전';
   } else if (diff < 3600 * 24) {
-    return Math.ceil(diff / 3600) + '小时前';
+    return Math.ceil(diff / 3600) + '시간 전';
   } else if (diff < 3600 * 24 * 2) {
-    return '1天前';
+    return '1일 전';
   }
   if (option) {
     return parseTime(time, option);
   } else {
-    return (
-      d.getMonth() +
-      1 +
-      '月' +
-      d.getDate() +
-      '日' +
-      d.getHours() +
-      '时' +
-      d.getMinutes() +
-      '分'
-    );
+    return `${d.getMonth() + 1}월 ${d.getDate()}일 ${d.getHours()}시 ${d.getMinutes()}분`;
   }
 }
 
@@ -124,7 +184,7 @@ export function byteLength(str) {
     const code = str.charCodeAt(i);
     if (code > 0x7f && code <= 0x7ff) s++;
     else if (code > 0x7ff && code <= 0xffff) s += 2;
-    if (code >= 0xDC00 && code <= 0xDFFF) i--;
+    if (code >= 0xdc00 && code <= 0xdfff) i--;
   }
   return s;
 }
@@ -150,7 +210,7 @@ export function cleanArray(actual) {
 export function param(json) {
   if (!json) return '';
   return cleanArray(
-    Object.keys(json).map(key => {
+    Object.keys(json).map((key) => {
       if (json[key] === undefined) return '';
       return encodeURIComponent(key) + '=' + encodeURIComponent(json[key]);
     })
@@ -168,7 +228,7 @@ export function param2Obj(url) {
   }
   const obj = {};
   const searchArr = search.split('&');
-  searchArr.forEach(v => {
+  searchArr.forEach((v) => {
     const index = v.indexOf('=');
     if (index !== -1) {
       const name = v.substring(0, index);
@@ -180,14 +240,43 @@ export function param2Obj(url) {
 }
 
 /**
- * @param {string} val
- * @returns {string}
- */
+* HTML 문자열에서 태그를 제거하고 순수 텍스트만 추출합니다.
+* @param {string} val - HTML 문자열
+* @returns {string} 태그가 제거된 순수 텍스트
+*
+* @example
+* html2Text('<p>Hello <b>World</b>!</p>')
+* // 결과: 'Hello World!'
+*
+* html2Text('<div>Line 1<br>Line 2</div>')
+* // 결과: 'Line 1Line 2'
+*/
 export function html2Text(val) {
   const div = document.createElement('div');
   div.innerHTML = val;
   return div.textContent || div.innerText;
 }
+
+/**
+ * 일반 텍스트를 HTML로 변환합니다. 줄바꿈(\n)을 <br> 태그로 변환합니다.
+ * @param {string} val - 변환할 텍스트
+ * @returns {string} HTML로 변환된 문자열
+ *
+ * @example
+ * text2Html('Hello\nWorld!')
+ * // 결과: 'Hello<br>World!'
+ *
+ * text2Html('Line 1\nLine 2\nLine 3')
+ * // 결과: 'Line 1<br>Line 2<br>Line 3'
+ *
+ * text2Html('No line break')
+ * // 결과: 'No line break'
+ */
+export function text2Html(val) {
+  if (!val) return '';
+  return val.replace(/\n/g, '<br>');
+}
+
 
 /**
  * Merges two objects, giving the last one precedence
@@ -202,7 +291,7 @@ export function objectMerge(target, source) {
   if (Array.isArray(source)) {
     return source.slice();
   }
-  Object.keys(source).forEach(property => {
+  Object.keys(source).forEach((property) => {
     const sourceProperty = source[property];
     if (typeof sourceProperty === 'object') {
       target[property] = objectMerge(target[property], sourceProperty);
@@ -226,9 +315,7 @@ export function toggleClass(element, className) {
   if (nameIndex === -1) {
     classString += '' + className;
   } else {
-    classString =
-      classString.substr(0, nameIndex) +
-      classString.substr(nameIndex + className.length);
+    classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length);
   }
   element.className = classString;
 }
@@ -254,7 +341,7 @@ export function getTime(type) {
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result;
 
-  const later = function() {
+  const later = function () {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp;
 
@@ -271,7 +358,7 @@ export function debounce(func, wait, immediate) {
     }
   };
 
-  return function(...args) {
+  return function (...args) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     context = this;
     timestamp = +new Date();
@@ -299,7 +386,7 @@ export function deepClone(source) {
     throw new Error('error arguments deepClone');
   }
   const targetObj = source.constructor === Array ? [] : {};
-  Object.keys(source).forEach(keys => {
+  Object.keys(source).forEach((keys) => {
     if (source[keys] && typeof source[keys] === 'object') {
       targetObj[keys] = deepClone(source[keys]);
     } else {
