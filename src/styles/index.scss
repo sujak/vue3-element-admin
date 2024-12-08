@@ -190,12 +190,15 @@ aside {
 }
 
 .filter-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
   padding-bottom: 10px;
 
+  .filter-item-group {
+  }
   .filter-item {
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom: 10px;
+
   }
 }
 
