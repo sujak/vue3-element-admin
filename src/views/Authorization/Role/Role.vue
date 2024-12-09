@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <div class="filter-item-group">
-        <el-input v-model="listQuery.name" placeholder="역할명" class="filter-item" @keyup.enter="handleFilter" style="width: 200px" />
+        <el-input v-model="listQuery.name" clearable placeholder="역할명" class="filter-item" @keyup.enter="handleFilter" style="width: 200px" />
         <!-- <el-select v-model="listQuery.sort" class="filter-item" @change="handleFilter">
           <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
         </el-select> -->
@@ -237,7 +237,7 @@ export default defineComponent({
             this.dialogFormVisible = false;
             ElNotification({
               title: 'Success',
-              message: 'Created Successfully',
+              message: response.message,
               type: 'success',
               duration: 2000
             });
@@ -257,14 +257,14 @@ export default defineComponent({
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp);
-          console.log(tempData);
-          updateRole(tempData.id, tempData).then(() => {
+          updateRole(tempData.id, tempData).then((response) => {
             const index = this.list.findIndex((v) => v.id === this.temp.id);
-            this.list.splice(index, 1, this.temp);
+            this.list.splice(index, 1, response.data);
+            console.log(response);
             this.dialogFormVisible = false;
             ElNotification({
               title: 'Success',
-              message: 'Update Successfully',
+              message: response.message,
               type: 'success',
               duration: 2000
             });
