@@ -114,36 +114,36 @@ export const constantRoutes:RouteRecordRaw[] = [
  */
 export const asyncRoutes:RouteRecordRaw[] = [
   {
-    path: '/authorization',
+    path: '/setting',
     component: Layout,
-    redirect: '/authorization/department',
-    name: 'Authorization',
+    redirect: '/setting/department',
+    name: 'Setting',
     meta: {
       alwaysShow: true, // 항상 루트 메뉴를 표시합니다
-      title: '권한 관리',
+      title: '설정',
       icon: 'lock',
       roles: ['ADMIN']
     },
     children: [
       {
-        path: 'department',
-        component: () => import('@/views/Authorization/Department/Department.vue'),
-        name: 'Department',
+        path: 'organization',
+        component: () => import('@/views/setting/organization/index.vue'),
+        name: 'Organization',
         meta: {
           title: '부서 관리'
         }
       },
-      {
-        path: 'user',
-        component: () => import('@/views/Authorization/User/User.vue'),
-        name: 'User',
-        meta: {
-          title: '사용자 관리'
-        }
-      },
+      // {
+      //   path: 'user',
+      //   component: () => import('@/views/setting/User/User.vue'),
+      //   name: 'User',
+      //   meta: {
+      //     title: '사용자 관리'
+      //   }
+      // },
       // {
       //   path: 'menu',
-      //   component: () => import('@/views/Authorization/Menu/Menu.vue'),
+      //   component: () => import('@/views/setting/Menu/Menu.vue'),
       //   name: 'Menu',
       //   meta: {
       //     title: '메뉴 관리'
@@ -151,12 +151,21 @@ export const asyncRoutes:RouteRecordRaw[] = [
       // },
       {
         path: 'role',
-        component: () => import('@/views/Authorization/Role/Role.vue'),
+        component: () => import('@/views/setting/role/index.vue'),
         name: 'Role',
         meta: {
           title: '역할 관리'
         }
-      }
+      },
+      {
+        path: 'common-code',
+        component: () => import('@/views/setting/common-code/index.vue'),
+        name: 'CommonCode',
+        meta: {
+          title: '공통코드 관리'
+        }
+      },
+
     ]
   },
   {
