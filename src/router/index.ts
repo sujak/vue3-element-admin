@@ -165,7 +165,14 @@ export const asyncRoutes:RouteRecordRaw[] = [
           title: '공통코드 관리'
         }
       },
-
+      {
+        path: 'automation',
+        component: () => import('@/views/setting/automation/index.vue'),
+        name: 'Automation',
+        meta: {
+          title: '자동화'
+        }
+      },
     ]
   },
   {

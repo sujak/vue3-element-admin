@@ -11,7 +11,7 @@ let failedQueue = [];
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   withCredentials: true, // 쿠키 전송을 위해 필요
-  timeout: 5000
+  timeout: 8000
 });
 
 // store 인스턴스 가져오기

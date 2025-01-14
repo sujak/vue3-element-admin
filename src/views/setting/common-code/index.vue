@@ -23,6 +23,7 @@
       :props="defaultProps"
       :allow-drop="allowDrop"
       :allow-drag="allowDrag"
+      :expand-on-click-node="false"
       draggable
       default-expand-all
       node-key="id"
