@@ -3,7 +3,11 @@
     <div class="filter-container">
       <div class="filter-item-group">
         <el-button :loading="processLoading" class="filter-item" type="primary" @click="handleAttendance">
-          신규등록
+          출첵
+        </el-button>
+
+        <el-button :loading="processLoading2" class="filter-item" type="primary" @click="handleUpdateMembers">
+        조직도
         </el-button>
       </div>
     </div>
@@ -22,11 +26,20 @@ export function processAttendance(params) {
   });
 }
 
+export function processGetMembers(params) {
+  return request({
+    url: '/api/v1/automation/hiworksUpdateMembers',
+    method: 'post',
+    params
+  });
+}
+
 export default defineComponent({
   name: 'Automation',
   data() {
     return {
       processLoading: false,
+      processLoading2: false
     };
   },
   created() {
@@ -39,6 +52,14 @@ export default defineComponent({
           console.log(res);
         }).then(()=> {
           this.processLoading = false;
+        })
+    },
+    handleUpdateMembers(){
+      this.processLoading2 = true;
+      processGetMembers().then((res)=> {
+          console.log(res);
+        }).then(()=> {
+          this.processLoading2 = false;
         })
     }
   }
